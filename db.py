@@ -1,9 +1,11 @@
 import psycopg2 as pg
 import json
+import pathlib
 
 class Database:
     def __init__(self):
-        with open('config.json', 'r') as config:
+        config = str(pathlib.Path(__file__).parent.resolve()) + '\config.json'
+        with open(config, 'r') as config:
             cred = json.load(config)
 
         self.host = cred['host']
