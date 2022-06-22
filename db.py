@@ -1,6 +1,7 @@
 import psycopg2 as pg
 import json
 import pathlib
+import itertools
 
 class Database:
     def __init__(self):
@@ -21,7 +22,8 @@ class Database:
     def execQuery(self, query):
         self.cur.execute(query)
         self.results = self.cur.fetchall()
-        return list(self.results)
+        result = list(itertools.chain(*self.results))
+        return result
     
     def update(self, query):
         self.cur.execute(query)
