@@ -56,7 +56,7 @@ class Whatsapp:
                             timeout -= 1
         raise RuntimeError(f"Page loading timeout")
 
-    def browser(self, numbers, db, verify_numbers, company):
+    def browser(self, numbers, db, verify_numbers, company, file):
         options = webdriver.ChromeOptions()
         datadir = str(pathlib.Path(__file__).parent.resolve()) + '\data'
         options.add_argument(r"user-data-dir="+datadir)
@@ -77,6 +77,8 @@ class Whatsapp:
                 self.verify_sent(driver, messages)
                 db.update("UPDATE ocean_cfg.msg_whatsapp_log SET send_ok = 1 WHERE mobile_phone = '" + number + "' AND date_send = '" + datetime.today().strftime('%Y%m%d') + "'")
 
+                file.write('\nNumber: ' + number + ' --- Sent')
+
             for number in verify_numbers:
                 message = [company + ' - Msgs OK! (' + time.strftime('%H:%M') + ')']
 
@@ -87,6 +89,6 @@ class Whatsapp:
                 self.send_message(driver, '//*[@id="main"]/footer/div[1]/div/span[2]/div/div[2]/div[1]/div/div[2]', message)
 
                 self.verify_sent(driver, message)
-
+                file.write('\nVerify Number: ' + number + ' --- Sent')
 
             driver.quit()
